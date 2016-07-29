@@ -1,0 +1,28 @@
+﻿{
+  "shippedToday": 20,
+  "_embedded": {
+    "order": {
+      "_links": {
+        "profile": { "href": "order" },
+        "self": { "href": "/orders/123" }
+      },
+      "total": 30.00,
+      "currency": "USD",
+      "status": "shipped",
+      "_embedded": {
+        "item": [
+          {
+            "name": "Item 1",
+            "price": 15.00,
+            "quantity": 1
+          },
+          {
+            "name": "Item 2",
+            "price": 5.00,
+            "quantity": 3
+          }
+        ]
+      } 
+    }
+  }
+}
