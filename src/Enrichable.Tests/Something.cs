@@ -6,15 +6,6 @@ using Xunit;
 
 namespace Enrichable.Tests
 {
-    public class TestHttpMessageHandler : HttpMessageHandler
-    {
-
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("{}")};
-        }
-    }
-
 
     public class when_intercepting_GET_request : with_owin_context
     {
