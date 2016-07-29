@@ -6,6 +6,7 @@ using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Owin.StaticFiles.ContentTypes;
 using Microsoft.Owin.Testing;
+using Nancy.Owin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Owin;
@@ -52,29 +53,10 @@ namespace Enrichable.Tests
         {
             using (var server = TestServer.Create(app =>
             {
-                app.Map("/proxy", a => a.Run(
-                    async ow =>
-                    {
-                        var req = ow.Environment.GetHttpRequestMessage("http://" + ow.Request.Host + "/server");
-
-                        using (var httpClient = BackendServer.HttpClient)
-                        {
-                            var resp = await httpClient.SendAsync(req);
-                            ow.Environment.SetHttpResponse(resp);
-                            var responseStream = await resp.Content.ReadAsStreamAsync();
-                            if (responseStream != null)
-                            {
-                                await responseStream.CopyToAsync(ow.Response.Body);
-                            }
-                        }
-                    }));
-
-                /*app.Use<ReverseProxyInterceptComponent>();
-                app.Use<ReverseProxyDispatchComponent>(new TestHttpMessageHandler());
-                app.Use<ReverseProxyResponseComponent>();*/
+                app.UseNancy(new NancyOptions() { Bootstrapper = new NancyTestBootstrapper(BackendServer.Handler)});
             }))
             {
-                HttpResponseMessage response = await server.HttpClient.GetAsync("/proxy/embedded-sample.json");
+                HttpResponseMessage response = await server.HttpClient.GetAsync("/proxy/embedded-sample");
 
                 var responseText = await response.Content.ReadAsStringAsync();
                 var responseObj = JsonConvert.DeserializeObject<JObject>(responseText);
