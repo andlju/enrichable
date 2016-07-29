@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace Enrichable.Tests
+namespace Enrichable
 {
     public interface IHalResourceEnricher
     {

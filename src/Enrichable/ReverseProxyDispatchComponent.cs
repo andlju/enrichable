@@ -14,12 +14,14 @@ namespace Enrichable
     public class ReverseProxyDispatchComponent
     {
         readonly Func<IDictionary<string, object>, Task> _next;
+        private readonly string _bodyEnvironmentKey;
         private readonly HttpMessageHandler _messageHandler;
         private readonly string _providerRootUrl = "http://dummy:1234/";
 
-        public ReverseProxyDispatchComponent(Func<IDictionary<string, object>, Task> next, HttpMessageHandler messageHandler)
+        public ReverseProxyDispatchComponent(Func<IDictionary<string, object>, Task> next, string bodyEnvironmentKey, HttpMessageHandler messageHandler)
         {
             _next = next;
+            _bodyEnvironmentKey = bodyEnvironmentKey;
             _messageHandler = messageHandler;
         }
 
@@ -47,7 +49,8 @@ namespace Enrichable
 
                 // Wait for the response
                 var response = await client.SendAsync(request);
-
+                var responseStream = await response.Content.ReadAsStreamAsync();
+                env[_bodyEnvironmentKey] = await responseStream.ReadAsJsonAsync();
                 /*proxyContext.ResponseStatusCode = (int)response.StatusCode;
                 proxyContext.ResponseReasonPhrase = response.ReasonPhrase;
 

@@ -45,6 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Packages\LibOwin.1.0\LibOwin.cs" />
+    <Compile Include="Enrichable.cs" />
+    <Compile Include="EnrichableHalJsonExtensions.cs" />
+    <Compile Include="HalResourceEnricherRegistry.cs" />
+    <Compile Include="IHalResourceEnricher.cs" />
     <Compile Include="ReverseProxyDispatchComponent.cs" />
     <Compile Include="ReverseProxyInterceptComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

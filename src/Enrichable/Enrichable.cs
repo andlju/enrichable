@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
-namespace Enrichable.Tests
+namespace Enrichable
 {
 
-    public class Enrichable
+    public class Enricher
     {
         private readonly HalResourceEnricherRegistry _registry;
         private readonly Func<Type, object> _enricherFactory;
 
         private readonly Dictionary<string, List<IHalResourceEnricher>> _enrichers;
 
-        public Enrichable(HalResourceEnricherRegistry registry, Func<Type,object> enricherFactory)
+        public Enricher(HalResourceEnricherRegistry registry, Func<Type,object> enricherFactory)
         {
             _registry = registry;
             _enricherFactory = enricherFactory;

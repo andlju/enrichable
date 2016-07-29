@@ -49,10 +49,10 @@ namespace Enrichable
         public static async Task<JObject> GetRequestBodyAsJsonAsync(this IDictionary<string, object> environment)
         {
             var owinContext = new OwinContext(environment);
-            return await ParseAsJsonAsync(owinContext.Request.Body);
+            return await ReadAsJsonAsync(owinContext.Request.Body);
         }
 
-        private static async Task<JObject> ParseAsJsonAsync(Stream inStream)
+        public static async Task<JObject> ReadAsJsonAsync(this Stream inStream)
         {
             if (inStream == null)
                 return null;

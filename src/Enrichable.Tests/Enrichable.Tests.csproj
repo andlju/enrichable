@@ -84,10 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enrichable.cs" />
-    <Compile Include="EnrichableHalJsonExtensions.cs" />
-    <Compile Include="HalResourceEnricherRegistry.cs" />
-    <Compile Include="IHalResourceEnricher.cs" />
+    <Compile Include="EnricherTest.cs" />
     <Compile Include="IntegrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Something.cs" />

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace Enrichable.Tests
+namespace Enrichable
 {
     public class EmbeddedResource
     {
