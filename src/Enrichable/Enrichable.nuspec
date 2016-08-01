@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<package>
+  <metadata>
+    <id>Enrichable</id>
+    <version>0.0.1</version>
+    <authors>Anders Ljusberg</authors>
+    <description>Library for simplifying reverse proxy scenarios with OWIN</description>
+    <language>en-US</language>
+    <projectUrl>https://github.com/andlju/enrichable/</projectUrl>
+    <licenseUrl>https://raw.githubusercontent.com/andlju/enrichable/master/LICENSE</licenseUrl>
+  </metadata>
+  <files>
+    <file src="bin\Release\Enrichable.dll" target="lib\net452" />
+  </files>
+</package>
