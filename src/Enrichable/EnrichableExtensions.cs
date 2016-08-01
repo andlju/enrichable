@@ -12,7 +12,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Enrichable
 {
-    public static class ReverseProxyOwinContextExtensions
+    public static class EnrichableExtensions
     {
         public static HttpRequestMessage GetHttpRequestMessage(this IDictionary<string,object> environment, string rootUrl)
         {
@@ -57,16 +57,16 @@ namespace Enrichable
             if (inStream == null)
                 return null;
 
-            var tmpStream = new MemoryStream();
+            /*var tmpStream = new MemoryStream();
             // Get a copy of the stream asynchronously so that we don't hold up this thread
             await inStream.CopyToAsync(tmpStream);
-
+            */
             JObject jsonBody = null;
-            if (tmpStream.Length > 0)
+            if (inStream.Length > 0)
             {
-                tmpStream.Position = 0;
+                inStream.Position = 0;
                 // Parse the body as Json. Maybe we could support other formats as well?
-                using (var reader = new StreamReader(tmpStream))
+                using (var reader = new StreamReader(inStream))
                 using (var jsonReader = new JsonTextReader(reader))
                 {
                     jsonBody = (JObject)JToken.ReadFrom(jsonReader);
@@ -74,6 +74,7 @@ namespace Enrichable
             }
             return jsonBody;
         }
+
         internal static string BuildQueryString(IDictionary<string, IList<string>> query)
         {
             if (query == null || !query.Any())

@@ -93,11 +93,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnricherTest.cs" />
-    <Compile Include="IntegrationTest.cs" />
+    <Compile Include="IntegrationTestBase.cs" />
     <Compile Include="IntegrationTestModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Something.cs" />
-    <Compile Include="with_owin_context.cs" />
+    <Compile Include="when_running_nancy_based_proxy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

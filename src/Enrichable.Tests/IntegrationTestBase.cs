@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using Microsoft.Owin;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Owin.StaticFiles.ContentTypes;
 using Microsoft.Owin.Testing;
-using Nancy.Owin;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Owin;
-using Xunit;
 
 namespace Enrichable.Tests
 {
@@ -39,31 +34,6 @@ namespace Enrichable.Tests
         public void Dispose()
         {
             BackendServer.Dispose();
-        }
-    }
-
-    public class IntegrationTest :IntegrationTestBase
-    {
-        public IntegrationTest()
-        {
-        }
-
-        [Fact]
-        public async void Test()
-        {
-            using (var server = TestServer.Create(app =>
-            {
-                app.UseNancy(new NancyOptions() { Bootstrapper = new NancyTestBootstrapper(BackendServer.Handler)});
-            }))
-            {
-                HttpResponseMessage response = await server.HttpClient.GetAsync("/proxy/embedded-sample");
-
-                var responseText = await response.Content.ReadAsStringAsync();
-                var responseObj = JsonConvert.DeserializeObject<JObject>(responseText);
-
-                // TODO: Validate response
-                Assert.Equal(30, responseObj.SelectToken("_embedded.order.total").Value<decimal>());
-            }
         }
     }
 }
