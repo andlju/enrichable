@@ -53,6 +53,9 @@
     <Compile Include="EnrichableExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Enrichable.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

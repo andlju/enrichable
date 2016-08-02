@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Enrichable.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("TCNE")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Enrichable.Tests")]
-[assembly: AssemblyCopyright("Copyright © TCNE 2016")]
+[assembly: AssemblyCopyright("Copyright © Anders Ljusberg 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

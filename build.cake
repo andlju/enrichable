@@ -24,6 +24,12 @@ var releaseNotes = ParseReleaseNotes("./ReleaseNotes.md");
 // Get version.
 var semanticVersion = releaseNotes.Version.ToString();
 
+// Get build number
+var buildNumber = 0; // Default to 0 for local builds
+if (isRunningOnAppVeyor) {
+  buildNumber = AppVeyor.Environment.Build.Number;
+}
+
 // Define directories.
 var sourceDirectory = Directory("./src");
 
@@ -108,14 +114,28 @@ Task("Patch-Assembly-Info")
   .Does(() =>
 {
   var assemblyInfoFiles = GetFiles("./**/AssemblyInfo.cs");
+  var assemblyVersion = semanticVersion + "." + buildNumber;
+
   foreach(var assemblyInfoFile in assemblyInfoFiles)
   {
+    var parsedAssemblyInfo = ParseAssemblyInfo(assemblyInfoFile);
     CreateAssemblyInfo(assemblyInfoFile, new AssemblyInfoSettings {
-      Product = projectName,
-      Version = semanticVersion,
-      FileVersion = semanticVersion,
-      InformationalVersion = semanticVersion,
-      Copyright = "Copyright (c) Anders Ljusberg"
+      // Copy everything except version from the old AssemblyInfo file
+      Product = parsedAssemblyInfo.Product,
+      Company = parsedAssemblyInfo.Company,
+      Title = parsedAssemblyInfo.Title,
+      Description = parsedAssemblyInfo.Description,
+      Guid = parsedAssemblyInfo.Guid,
+      Copyright = parsedAssemblyInfo.Copyright,
+      Trademark = parsedAssemblyInfo.Trademark,
+      ComVisible = parsedAssemblyInfo.ComVisible,
+      CLSCompliant = parsedAssemblyInfo.ClsCompliant,
+      InternalsVisibleTo = parsedAssemblyInfo.InternalsVisibleTo,
+      Configuration = parsedAssemblyInfo.Configuration,
+
+      Version = assemblyVersion,
+      FileVersion = assemblyVersion,
+      InformationalVersion = assemblyVersion
     });
   }
 });
@@ -176,7 +196,8 @@ Task("Update-AppVeyor-Build-Number")
   .WithCriteria(() => isRunningOnAppVeyor)
   .Does(() =>
 {
-  AppVeyor.UpdateBuildVersion(semanticVersion);
+  var appVeyorVersion = semanticVersion + "." + buildNumber;
+  AppVeyor.UpdateBuildVersion(appVeyorVersion);
 });
 
 Task("Upload-AppVeyor-Artifacts")
@@ -225,7 +246,7 @@ Task("Package")
 Task("Publish")
   .IsDependentOn("Update-AppVeyor-Build-Number")
   .IsDependentOn("Upload-AppVeyor-Artifacts")
-  .IsDependentOn("Publish-NuGet-Packages");
+  /*.IsDependentOn("Publish-NuGet-Packages")*/;
 
 ///////////////////////////////////////////////////////////////////////////////
 // EXECUTION
