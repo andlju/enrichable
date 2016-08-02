@@ -39,7 +39,7 @@ namespace Enrichable
         public void Analyze(JObject resource, string rel)
         {
             // Get the profile href of this object if any
-            var profile = resource.GetLinks("profile")?.FirstOrDefault()?.Href;
+            var profile = resource.GetLinks("profile")?.FirstOrDefault()?.Value["href"].Value<string>();
             var enrichers = GetEnrichersForProfile(profile);
 
             foreach (var enricher in enrichers)
@@ -50,7 +50,7 @@ namespace Enrichable
             var embedded = resource.GetEmbedded();
             foreach (var embeddedResource in embedded)
             {
-                Analyze(embeddedResource.Resource, embeddedResource.Rel);
+                Analyze(embeddedResource.Value, embeddedResource.Rel);
             }
         }
 
