@@ -27,11 +27,14 @@ namespace Enrichable
         public IEnumerable<Type> GetEnricherImplementations(string profile)
         {
             List<Type> enrichers;
-            if (_enrichers.TryGetValue(profile, out enrichers))
+            if (!string.IsNullOrEmpty(profile))
             {
-                foreach (var enricher in enrichers)
+                if (_enrichers.TryGetValue(profile, out enrichers))
                 {
-                    yield return enricher;
+                    foreach (var enricher in enrichers)
+                    {
+                        yield return enricher;
+                    }
                 }
             }
             if (_enrichers.TryGetValue(string.Empty, out enrichers))

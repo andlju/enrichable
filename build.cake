@@ -6,6 +6,7 @@
 
 var target = Argument<string>("target", "Default");
 var configuration = Argument<string>("configuration", "Release");
+var buildNumber = Argument<int>("buildnumber", 0);
 
 ///////////////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -25,7 +26,6 @@ var releaseNotes = ParseReleaseNotes("./ReleaseNotes.md");
 var semanticVersion = releaseNotes.Version.ToString();
 
 // Get build number
-var buildNumber = 0; // Default to 0 for local builds
 if (isRunningOnAppVeyor) {
   buildNumber = AppVeyor.Environment.Build.Number;
 }
@@ -179,6 +179,10 @@ Task("Create-NuGet-Packages")
   .IsDependentOn("Run-Unit-Tests")
   .Does(() =>
 {
+  var nugetVersion = semanticVersion;
+  if (local) {
+    nugetVersion = string.Format("{0}-build{1:0000}", nugetVersion, buildNumber);
+  }
   var nuspecFiles = GetFiles(sourceDirectory.Path + "/**/*.nuspec");
   foreach(var nuspecFile in nuspecFiles)
   {
@@ -186,7 +190,7 @@ Task("Create-NuGet-Packages")
       new NuGetPackSettings
       {
         OutputDirectory = artifactsDirectory.Path,
-        Version = semanticVersion
+        Version = nugetVersion
       }
     );
   }

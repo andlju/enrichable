@@ -56,8 +56,8 @@ namespace Enrichable
 
         private IEnumerable<IHalResourceEnricher> GetEnrichersForProfile(string profile)
         {
-            if (string.IsNullOrEmpty(profile))
-                return Enumerable.Empty<IHalResourceEnricher>();
+            if (profile == null)
+                profile = string.Empty;
 
             List<IHalResourceEnricher> profileEnrichers;
             if (!_enrichers.TryGetValue(profile, out profileEnrichers))
