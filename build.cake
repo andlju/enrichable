@@ -44,7 +44,7 @@ var solutionPaths = solutions.Select(solution => solution.GetDirectory());
 // SETUP / TEARDOWN
 ///////////////////////////////////////////////////////////////////////////////
 
-Setup((context =>
+Setup(context =>
 {
   // Executed BEFORE the first task.
   Information("Target: " + target);
