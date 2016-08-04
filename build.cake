@@ -39,14 +39,12 @@ var artifactsDirectory = outputDirectory + Directory("artifacts");
 var solutions = GetFiles("./**/*.sln");
 var solutionPaths = solutions.Select(solution => solution.GetDirectory());
 
-// Define files.
-var nugetExecutable = "./Tools/nuget.exe"; 
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
 ///////////////////////////////////////////////////////////////////////////////
 
-Setup(() =>
+Setup((context =>
 {
   // Executed BEFORE the first task.
   Information("Target: " + target);
@@ -57,7 +55,7 @@ Setup(() =>
   Information("NuGet Api Key: " + EnvironmentVariable("NuGetApiKey"));
 });
 
-Teardown(() =>
+Teardown(context =>
 {
   // Executed AFTER the last task.
   Information("Finished running tasks.");

@@ -36,7 +36,7 @@ namespace Enrichable
             }
         }
 
-        public void Analyze(JObject resource, string rel)
+        private void Analyze(JObject resource, string rel)
         {
             // Get the profile href of this object if any
             var profile = resource.GetLinks("profile")?.FirstOrDefault()?.Value["href"].Value<string>();

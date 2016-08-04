@@ -1,3 +1,6 @@
+## New in 0.0.5 (Released 2016-08-04)
+* The Analyze method was accidentally public. Now private instead.
+
 ## New in 0.0.4 (Released 2016-08-02)
 * Enabling local prerelease builds
 
