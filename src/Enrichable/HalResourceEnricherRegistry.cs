@@ -6,42 +6,42 @@ namespace Enrichable
 {
     public class HalResourceEnricherRegistry
     {
-        readonly Dictionary<string, List<Type>> _enrichers = new Dictionary<string, List<Type>>();
+        readonly Dictionary<string, List<Func<IHalResourceEnricher>>> _enricherFactories = new Dictionary<string, List<Func<IHalResourceEnricher>>>();
 
         /// <summary>
         /// Register a new enricher
         /// </summary>
-        /// <typeparam name="TEnricher">Type of the enricher</typeparam>
+        /// <param name="enricherFactory">Factory method for creating the enricher</param>
         /// <param name="profile">Profile that this enricher should be applied to. The defaults to all profiles.</param>
-        public void RegisterEnricher<TEnricher>(string profile = "") where TEnricher : IHalResourceEnricher
+        public void RegisterEnricher(Func<IHalResourceEnricher> enricherFactory, string profile = "")
         {
-            List<Type> enrichers;
-            if (!_enrichers.TryGetValue(profile, out enrichers))
+            List<Func<IHalResourceEnricher>> enrichers;
+            if (!_enricherFactories.TryGetValue(profile, out enrichers))
             {
-                enrichers = new List<Type>();
-                _enrichers.Add(profile, enrichers);
+                enrichers = new List<Func<IHalResourceEnricher>>();
+                _enricherFactories.Add(profile, enrichers);
             }
-            enrichers.Add(typeof(TEnricher));
+            enrichers.Add(enricherFactory);
         }
 
-        public IEnumerable<Type> GetEnricherImplementations(string profile)
+        public IEnumerable<IHalResourceEnricher> GetEnrichers(string profile)
         {
-            List<Type> enrichers;
+            List<Func<IHalResourceEnricher>> enrichers;
             if (!string.IsNullOrEmpty(profile))
             {
-                if (_enrichers.TryGetValue(profile, out enrichers))
+                if (_enricherFactories.TryGetValue(profile, out enrichers))
                 {
                     foreach (var enricher in enrichers)
                     {
-                        yield return enricher;
+                        yield return enricher();
                     }
                 }
             }
-            if (_enrichers.TryGetValue(string.Empty, out enrichers))
+            if (_enricherFactories.TryGetValue(string.Empty, out enrichers))
             {
                 foreach (var enricher in enrichers)
                 {
-                    yield return enricher;
+                    yield return enricher();
                 }
             }
         }

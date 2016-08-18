@@ -75,10 +75,7 @@ namespace Enrichable
 
         private IEnumerable<IHalResourceEnricher> BuildEnrichers(string profile)
         {
-            foreach (var type in _registry.GetEnricherImplementations(profile))
-            {
-                yield return (IHalResourceEnricher) _enricherFactory(type);
-            }
+            return _registry.GetEnrichers(profile);
         }
 
     }

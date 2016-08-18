@@ -51,8 +51,8 @@ namespace Enrichable.Tests
         {
             var root = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("samples\\embedded-sample.json"));
             var registry = new HalResourceEnricherRegistry();
-            registry.RegisterEnricher<TestEnricher>("order");
-            registry.RegisterEnricher<GlobalEnricher>();
+            registry.RegisterEnricher(() => new TestEnricher(), "order");
+            registry.RegisterEnricher(() => new GlobalEnricher());
 
             var target = new Enricher(registry, Activator.CreateInstance);
             target.Enrich(root);
