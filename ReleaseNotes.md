@@ -1,3 +1,6 @@
+## New in 0.0.6 (Released 2016-08-18)
+* Register enrichers as factory methods instead.
+
 ## New in 0.0.5 (Released 2016-08-04)
 * The Analyze method was accidentally public. Now private instead.
 
