@@ -1,23 +1,20 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
 namespace Enrichable
 {
-
-    public class Enricher
+    class EnrichmentRunner
     {
-        private readonly HalResourceEnricherRegistry _registry;
-        private readonly Func<Type, object> _enricherFactory;
+        private readonly EnricherRegistry _registry;
+        private readonly IDictionary<string, object> _owinEnvironment;
+        private readonly Dictionary<string, List<IResourceEnricher>> _enricherInstances;
 
-        private readonly Dictionary<string, List<IHalResourceEnricher>> _enrichers;
-
-        public Enricher(HalResourceEnricherRegistry registry, Func<Type,object> enricherFactory)
+        public EnrichmentRunner(EnricherRegistry registry, IDictionary<string, object> owinEnvironment)
         {
             _registry = registry;
-            _enricherFactory = enricherFactory;
-            _enrichers = new Dictionary<string, List<IHalResourceEnricher>>();
+            _owinEnvironment = owinEnvironment;
+            _enricherInstances = new Dictionary<string, List<IResourceEnricher>>();
         }
 
         public void Enrich(JObject root)
@@ -54,28 +51,25 @@ namespace Enrichable
             }
         }
 
-        private IEnumerable<IHalResourceEnricher> GetEnrichersForProfile(string profile)
+        private IEnumerable<IResourceEnricher> GetEnrichersForProfile(string profile)
         {
-            if (profile == null)
-                profile = string.Empty;
-
-            List<IHalResourceEnricher> profileEnrichers;
-            if (!_enrichers.TryGetValue(profile, out profileEnrichers))
+            List<IResourceEnricher> profileEnrichers;
+            if (!_enricherInstances.TryGetValue(profile ?? string.Empty, out profileEnrichers))
             {
                 profileEnrichers = BuildEnrichers(profile).ToList();
-                _enrichers.Add(profile, profileEnrichers);
+                _enricherInstances.Add(profile ?? string.Empty, profileEnrichers);
             }
             return profileEnrichers;
         }
 
-        private IEnumerable<IHalResourceEnricher> GetAllEnrichers()
+        private IEnumerable<IResourceEnricher> GetAllEnrichers()
         {
-            return _enrichers.Values.SelectMany(d => d);
+            return _enricherInstances.Values.SelectMany(d => d);
         }
 
-        private IEnumerable<IHalResourceEnricher> BuildEnrichers(string profile)
+        private IEnumerable<IResourceEnricher> BuildEnrichers(string profile)
         {
-            return _registry.GetEnrichers(profile);
+            return _registry.BuildEnrichers(_owinEnvironment, profile);
         }
 
     }

@@ -45,10 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Packages\LibOwin.1.0\LibOwin.cs" />
-    <Compile Include="Enricher.cs" />
+    <Compile Include="Enrichment.cs" />
     <Compile Include="EnrichableHalJsonExtensions.cs" />
-    <Compile Include="HalResourceEnricherRegistry.cs" />
-    <Compile Include="IHalResourceEnricher.cs" />
+    <Compile Include="EnricherRegistry.cs" />
+    <Compile Include="EnrichmentRunner.cs" />
+    <Compile Include="IResourceEnricher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EnrichableExtensions.cs" />
   </ItemGroup>

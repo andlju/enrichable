@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Owin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Enrichable.Tests
 {
-    public class GlobalEnricher : IHalResourceEnricher
+    public class GlobalEnricher : IResourceEnricher
     {
         List<JObject> _resources = new List<JObject>();
 
@@ -26,7 +27,7 @@ namespace Enrichable.Tests
         }
     }
 
-    public class TestEnricher : IHalResourceEnricher
+    public class TestEnricher : IResourceEnricher
     {
         List<JObject> _resources = new List<JObject>();
 
@@ -50,12 +51,11 @@ namespace Enrichable.Tests
         public void Test()
         {
             var root = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("samples\\embedded-sample.json"));
-            var registry = new HalResourceEnricherRegistry();
-            registry.RegisterEnricher(() => new TestEnricher(), "order");
-            registry.RegisterEnricher(() => new GlobalEnricher());
-
-            var target = new Enricher(registry, Activator.CreateInstance);
-            target.Enrich(root);
+            var target = new Enrichment();
+            target.RegisterEnricher((env) => new TestEnricher(), "order");
+            target.RegisterEnricher((env) => new GlobalEnricher());
+            var owinContext = new OwinContext();
+            target.Enrich(root, owinContext.Environment);
             
             Assert.Equal("test", root.SelectToken("_embedded.order.test"));
             Assert.Equal(1, root.SelectToken("_embedded.order.global"));

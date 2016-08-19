@@ -14,12 +14,9 @@ namespace Enrichable.Tests
 
         public when_running_nancy_based_proxy()
         {
-            var enricherRegistry = new HalResourceEnricherRegistry();
-            enricherRegistry.RegisterEnricher(() => new TestEnricher(), "order");
-
             using (var server = TestServer.Create(app =>
             {
-                app.UseNancy(new NancyOptions() { Bootstrapper = new NancyTestBootstrapper(BackendServer.Handler, enricherRegistry) });
+                app.UseNancy(new NancyOptions() { Bootstrapper = new NancyTestBootstrapper(BackendServer.Handler) });
             }))
             {
                 HttpResponseMessage response = server.HttpClient.GetAsync("/proxy/embedded-sample").Result;
