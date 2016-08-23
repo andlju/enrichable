@@ -1,3 +1,6 @@
+## New in 0.0.8 (Released 2016-08-23)
+* Can now specify a default factory method for enrichers
+
 ## New in 0.0.7 (Released 2016-08-19)
 * Restructuring
 * Ability to use the OwinEnvironment from Enrichers

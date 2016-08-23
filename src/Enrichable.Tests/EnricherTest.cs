@@ -45,21 +45,51 @@ namespace Enrichable.Tests
         }
     }
 
-    public class EnricherTest
+    public class DefaultFactoryEnricherTest : EnricherTestBase
     {
+        public DefaultFactoryEnricherTest()
+        {
+            Target = new Enrichment();
+            Target.RegisterEnricher((env) => new TestEnricher(), "order");
+            Target.RegisterEnricher((env) => new GlobalEnricher());
+        }
+    }
+
+    public class CustomFactoryEnricherTest : EnricherTestBase
+    {
+        public CustomFactoryEnricherTest()
+        {
+            Target = new Enrichment(EnricherFactory);
+            Target.RegisterEnricher<TestEnricher>( "order");
+            Target.RegisterEnricher<GlobalEnricher>();
+        }
+
+        private IResourceEnricher EnricherFactory(IDictionary<string, object> env, Type enricherType)
+        {
+            return (IResourceEnricher) Activator.CreateInstance(enricherType);
+        }
+    }
+
+    public abstract class EnricherTestBase
+    {
+        protected Enrichment Target;
+
         [Fact]
         public void Test()
         {
             var root = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("samples\\embedded-sample.json"));
-            var target = new Enrichment();
-            target.RegisterEnricher((env) => new TestEnricher(), "order");
-            target.RegisterEnricher((env) => new GlobalEnricher());
             var owinContext = new OwinContext();
-            target.Enrich(root, owinContext.Environment);
+            Target.Enrich(root, owinContext.Environment);
             
             Assert.Equal("test", root.SelectToken("_embedded.order.test"));
             Assert.Equal(1, root.SelectToken("_embedded.order.global"));
             Assert.Equal(2, root.SelectToken("_embedded.order._embedded.item[0].global"));
+        }
+
+        [Fact]
+        public void Enrichment_with_factory()
+        {
+            
         }
     }
 }
