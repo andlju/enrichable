@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnricherTest.cs" />
+    <Compile Include="HalJsonExtensionTests.cs" />
     <Compile Include="IntegrationTestBase.cs" />
     <Compile Include="IntegrationTestModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

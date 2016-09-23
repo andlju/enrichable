@@ -46,6 +46,38 @@ namespace Enrichable
             }
         }
 
+        public static void AddLink(this JObject resource, string rel, string href)
+        {
+            var linksObj = resource["_links"] as JObject ?? (JObject)(resource["_links"] = new JObject());
+            var linkToAdd = new JObject()
+            {
+                new JProperty("href", href)
+            };
+            // Do we already have an array?
+            var relArray = linksObj[rel] as JArray;
+            if (relArray == null)
+            {
+                // No array, do we have a single object?
+                var relObj = linksObj[rel] as JObject;
+                if (relObj != null)
+                {
+                    // Found single object, let's convert it to an array
+                    // and add the single object
+                    linksObj[rel] = relArray = new JArray(relObj);
+                }
+            }
+            if (relArray != null)
+            {
+                // We have an array one way or another, let's add to it
+                relArray.Add(linkToAdd);
+            }
+            else
+            {
+                // Still no array. Add the single object
+                linksObj[rel] = linkToAdd;
+            }
+
+        }
 
         public static IEnumerable<RelatedObject> GetEmbedded(this JObject resource)
         {

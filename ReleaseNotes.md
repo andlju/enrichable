@@ -1,3 +1,6 @@
+## New in 0.0.9 (Released 2016-09-23)
+* New AddLink extension method
+
 ## New in 0.0.8 (Released 2016-08-23)
 * Can now specify a default factory method for enrichers
 
