@@ -38,6 +38,17 @@ namespace Enrichable.Tests
             embeddedOrder.AddLink("test-link", "http://my.test.int");
 
             Assert.Equal("http://my.test.int", embeddedOrder.SelectToken("_links['test-link']['href']"));
+            Assert.Equal(null, embeddedOrder.SelectToken("_links['test-link']['templated']"));
+        }
+
+        [Fact]
+        public void AddLink_with_template_sets_templated_flat()
+        {
+            var embeddedOrder = _sampleJson.GetEmbedded().First().Value;
+
+            embeddedOrder.AddLink("test-link", "http://my.test.int/{?Test}");
+
+            Assert.Equal(true, embeddedOrder.SelectToken("_links['test-link']['templated']"));
         }
 
         [Fact]
@@ -60,5 +71,7 @@ namespace Enrichable.Tests
 
             Assert.Equal("http://my.test.int", embeddedOrder.SelectToken("_links['profile'][1]['href']"));
         }
+
+
     }
 }

@@ -53,6 +53,12 @@ namespace Enrichable
             {
                 new JProperty("href", href)
             };
+            if (href.Contains("{"))
+            {
+                // Add the templated flag
+                linkToAdd.Add(new JProperty("templated", true));
+            }
+
             // Do we already have an array?
             var relArray = linksObj[rel] as JArray;
             if (relArray == null)
