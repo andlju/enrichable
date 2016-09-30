@@ -1,3 +1,7 @@
+## New in 0.0.11 (Released 2016-09-30)
+* AddLink can take a prompt
+* New AddEmbedded extension method
+
 ## New in 0.0.10 (Released 2016-09-23)
 * Also add the templated flag if link is templated
 

@@ -46,19 +46,16 @@ namespace Enrichable
             }
         }
 
-        public static void AddLink(this JObject resource, string rel, string href)
+        /// <summary>
+        /// Add to a HAL-type property
+        /// </summary>
+        /// <param name="resource">The resource to add a rel property to</param>
+        /// <param name="propertyName">The name of the rel property</param>
+        /// <param name="rel">Relation</param>
+        /// <param name="objectToAdd">The object to add</param>
+        private static void AddRelObject(this JObject resource, string propertyName, string rel, JObject objectToAdd)
         {
-            var linksObj = resource["_links"] as JObject ?? (JObject)(resource["_links"] = new JObject());
-            var linkToAdd = new JObject()
-            {
-                new JProperty("href", href)
-            };
-            if (href.Contains("{"))
-            {
-                // Add the templated flag
-                linkToAdd.Add(new JProperty("templated", true));
-            }
-
+            var linksObj = resource[propertyName] as JObject ?? (JObject)(resource[propertyName] = new JObject());
             // Do we already have an array?
             var relArray = linksObj[rel] as JArray;
             if (relArray == null)
@@ -75,14 +72,36 @@ namespace Enrichable
             if (relArray != null)
             {
                 // We have an array one way or another, let's add to it
-                relArray.Add(linkToAdd);
+                relArray.Add(objectToAdd);
             }
             else
             {
                 // Still no array. Add the single object
-                linksObj[rel] = linkToAdd;
+                linksObj[rel] = objectToAdd;
             }
+        }
 
+        public static void AddLink(this JObject resource, string rel, string href, string prompt = null)
+        {
+            var linkToAdd = new JObject()
+            {
+                new JProperty("href", href)
+            };
+            if (prompt != null)
+            {
+                linkToAdd.Add(new JProperty("prompt", prompt));
+            }
+            if (href.Contains("{"))
+            {
+                // Add the templated flag
+                linkToAdd.Add(new JProperty("templated", true));
+            }
+            resource.AddRelObject("_links", rel, linkToAdd);
+        }
+
+        public static void AddEmbedded(this JObject resource, string rel, JObject embeddedObjectToAdd)
+        {
+            resource.AddRelObject("_embedded", rel, embeddedObjectToAdd);
         }
 
         public static IEnumerable<RelatedObject> GetEmbedded(this JObject resource)

@@ -42,6 +42,18 @@ namespace Enrichable.Tests
         }
 
         [Fact]
+        public void AddLink_with_prompt()
+        {
+            var embeddedOrder = _sampleJson.GetEmbedded().First().Value;
+
+            embeddedOrder.AddLink("test-link", "http://my.test.int", "My test link");
+
+            Assert.Equal("http://my.test.int", embeddedOrder.SelectToken("_links['test-link']['href']"));
+            Assert.Equal("My test link", embeddedOrder.SelectToken("_links['test-link']['prompt']"));
+            Assert.Equal(null, embeddedOrder.SelectToken("_links['test-link']['templated']"));
+        }
+
+        [Fact]
         public void AddLink_with_template_sets_templated_flat()
         {
             var embeddedOrder = _sampleJson.GetEmbedded().First().Value;
@@ -72,6 +84,33 @@ namespace Enrichable.Tests
             Assert.Equal("http://my.test.int", embeddedOrder.SelectToken("_links['profile'][1]['href']"));
         }
 
+        [Fact]
+        public void AddEmbedded_adds_single_object()
+        {
+            var embeddedOrder = _sampleJson.GetEmbedded().First().Value;
+            embeddedOrder.AddEmbedded("address", new JObject()
+            {
+                new JProperty("street", "Testgatan 5"),
+                new JProperty("zip", "123 45")
+            });
+            Assert.Equal("Testgatan 5", embeddedOrder.SelectToken("_embedded['address']['street']"));
+        }
 
+        [Fact]
+        public void AddEmbedded_twice_creates_array()
+        {
+            var embeddedOrder = _sampleJson.GetEmbedded().First().Value;
+            embeddedOrder.AddEmbedded("address", new JObject()
+            {
+                new JProperty("street", "Testgatan 5"),
+                new JProperty("zip", "123 45")
+            });
+            embeddedOrder.AddEmbedded("address", new JObject()
+            {
+                new JProperty("street", "Testgatan 10"),
+                new JProperty("zip", "123 45")
+            });
+            Assert.Equal("Testgatan 10", embeddedOrder.SelectToken("_embedded['address'][1]['street']"));
+        }
     }
 }
