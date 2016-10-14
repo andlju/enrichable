@@ -1,3 +1,6 @@
+## New in 0.0.12 (Released 2016-10-14)
+ * Can force to use arrays for embedded items and links
+
 ## New in 0.0.11 (Released 2016-09-30)
 * AddLink can take a prompt
 * New AddEmbedded extension method

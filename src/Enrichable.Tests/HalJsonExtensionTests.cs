@@ -97,6 +97,18 @@ namespace Enrichable.Tests
         }
 
         [Fact]
+        public void AddEmbedded_can_force_array_when_adding_single_object()
+        {
+            var embeddedOrder = _sampleJson.GetEmbedded().First().Value;
+            embeddedOrder.AddEmbedded("address", true, new JObject()
+            {
+                new JProperty("street", "Testgatan 5"),
+                new JProperty("zip", "123 45")
+            });
+            Assert.Equal("Testgatan 5", embeddedOrder.SelectToken("_embedded['address'][0]['street']"));
+        }
+
+        [Fact]
         public void AddEmbedded_twice_creates_array()
         {
             var embeddedOrder = _sampleJson.GetEmbedded().First().Value;

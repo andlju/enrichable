@@ -53,7 +53,7 @@ namespace Enrichable
         /// <param name="propertyName">The name of the rel property</param>
         /// <param name="rel">Relation</param>
         /// <param name="objectToAdd">The object to add</param>
-        private static void AddRelObject(this JObject resource, string propertyName, string rel, JObject objectToAdd)
+        private static void AddRelObject(this JObject resource, string propertyName, string rel, bool forceArray, JObject objectToAdd)
         {
             var linksObj = resource[propertyName] as JObject ?? (JObject)(resource[propertyName] = new JObject());
             // Do we already have an array?
@@ -76,12 +76,24 @@ namespace Enrichable
             }
             else
             {
-                // Still no array. Add the single object
-                linksObj[rel] = objectToAdd;
+                // Still no array. Add the single object or as an array if forced
+                if (forceArray)
+                {
+                    linksObj[rel] = new JArray(objectToAdd);
+                }
+                else
+                {
+                    linksObj[rel] = objectToAdd;
+                }
             }
         }
 
         public static void AddLink(this JObject resource, string rel, string href, string prompt = null)
+        {
+            resource.AddLink(rel, href, false, prompt);
+        }
+
+        public static void AddLink(this JObject resource, string rel, string href, bool forceArray, string prompt = null)
         {
             var linkToAdd = new JObject()
             {
@@ -96,12 +108,17 @@ namespace Enrichable
                 // Add the templated flag
                 linkToAdd.Add(new JProperty("templated", true));
             }
-            resource.AddRelObject("_links", rel, linkToAdd);
+            resource.AddRelObject("_links", rel, forceArray, linkToAdd);
         }
 
         public static void AddEmbedded(this JObject resource, string rel, JObject embeddedObjectToAdd)
         {
-            resource.AddRelObject("_embedded", rel, embeddedObjectToAdd);
+            resource.AddRelObject("_embedded", rel, false, embeddedObjectToAdd);
+        }
+
+        public static void AddEmbedded(this JObject resource, string rel, bool forceArray, JObject embeddedObjectToAdd)
+        {
+            resource.AddRelObject("_embedded", rel, forceArray, embeddedObjectToAdd);
         }
 
         public static IEnumerable<RelatedObject> GetEmbedded(this JObject resource)
