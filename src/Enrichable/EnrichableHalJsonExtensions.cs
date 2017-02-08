@@ -3,21 +3,13 @@ using Newtonsoft.Json.Linq;
 
 namespace Enrichable
 {
-    public class RelatedObject
-    {
-        public RelatedObject(JObject value, string rel)
-        {
-            Value = value;
-            Rel = rel;
-        }
-
-        public JObject Value { get; }
-        public string Rel { get; }
-    }
-
-
     public static class EnrichableHalJsonExtensions
     {
+        /// <summary>
+        /// Get all links and their relations from this resource. 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <returns>A list of RelatedObjects</returns>
         public static IEnumerable<RelatedObject> GetLinks(this JObject resource)
         {
             var links = resource["_links"] as JObject;
@@ -33,6 +25,11 @@ namespace Enrichable
             }
         }
 
+        /// <summary>
+        /// Get all links for a specific relation from this resource. 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <returns>A list of RelatedObjects</returns>
         public static IEnumerable<RelatedObject> GetLinks(this JObject resource, string rel)
         {
             var links = resource["_links"] as JObject;
@@ -45,6 +42,45 @@ namespace Enrichable
                 yield return resourceLink;
             }
         }
+
+        /// <summary>
+        /// Get all forms and their relations from this resource. 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <returns>A list of RelatedObjects</returns>
+        public static IEnumerable<RelatedObject> GetForms(this JObject resource)
+        {
+            var forms = resource["_forms"] as JObject;
+            if (forms == null)
+                yield break;
+
+            foreach (var property in forms.Properties())
+            {
+                foreach (var resourceForm in GetRelatedObjectsFromProperty(property))
+                {
+                    yield return resourceForm;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get all forms for a specific relation from this resource. 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <returns>A list of RelatedObjects</returns>
+        public static IEnumerable<RelatedObject> GetForms(this JObject resource, string rel)
+        {
+            var forms = resource["_forms"] as JObject;
+            var property = forms?.Property(rel);
+            if (property == null)
+                yield break;
+
+            foreach (var resourceForm in GetRelatedObjectsFromProperty(property))
+            {
+                yield return resourceForm;
+            }
+        }
+
 
         /// <summary>
         /// Add to a HAL-type property

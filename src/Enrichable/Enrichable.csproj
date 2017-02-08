@@ -52,6 +52,7 @@
     <Compile Include="IResourceEnricher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EnrichableExtensions.cs" />
+    <Compile Include="RelatedObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Enrichable.nuspec">

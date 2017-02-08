@@ -83,7 +83,7 @@ namespace Enrichable.Tests
             
             Assert.Equal("test", root.SelectToken("_embedded.order.test"));
             Assert.Equal(1, root.SelectToken("_embedded.order.global"));
-            Assert.Equal(2, root.SelectToken("_embedded.order._embedded.item[0].global"));
+            Assert.Equal(2, root.SelectToken("_embedded.order._embedded.item[1].global"));
         }
 
         [Fact]

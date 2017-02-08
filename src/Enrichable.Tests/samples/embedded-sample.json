@@ -22,7 +22,15 @@
             "quantity": 3
           }
         ]
-      } 
+      }
     }
+  },
+  "_links": {
+    "profile": { "href": "orders" },
+    "self": { "href": "/orders" },
+    "seealso": [
+      { "href": "/test" },
+      { "href": "/test2" }
+    ]
   }
 }

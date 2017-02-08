@@ -1,3 +1,6 @@
+## New in 0.0.13 (Released 2017-02-08)
+ * Basic handling of _forms
+
 ## New in 0.0.12 (Released 2016-10-14)
  * Can force to use arrays for embedded items and links
 

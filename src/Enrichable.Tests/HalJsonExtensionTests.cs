@@ -16,6 +16,22 @@ namespace Enrichable.Tests
         }
 
         [Fact]
+        public void GetLinks_returns_links()
+        {
+            var links = _sampleJson.GetLinks();
+
+            Assert.Equal(4, links.Count());
+        }
+
+        [Fact]
+        public void GetLinks_for_rel_returns_links()
+        {
+            var links = _sampleJson.GetLinks("seealso");
+
+            Assert.Equal(2, links.Count());
+        }
+
+        [Fact]
         public void GetEmbedded_returns_single_embedded_item()
         {
             var embeddedOrder = _sampleJson.GetEmbedded();
